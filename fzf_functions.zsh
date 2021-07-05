@@ -28,6 +28,22 @@ code_open_file() {
   fi
 }
 
+code_open_file_with_term() {
+  # taken from fzf examples
+  INITIAL_QUERY=""
+  RG_PREFIX="rg  --line-number --no-heading --color=always --smart-case "
+  result=$(FZF_DEFAULT_COMMAND="$RG_PREFIX '$INITIAL_QUERY'" \
+    fzf --bind "change:reload:$RG_PREFIX {q} || true" \
+        --ansi --disabled --query "$INITIAL_QUERY" \
+        --height=50% --layout=reverse
+  )
+  file_name="$(echo $result | awk -F ':' '{print $1}')"
+  line_number="$(echo $result | awk -F ':' '{print $2}')"
+
+  code -g "$file_name:$line_number"
+}
+
 alias ccp='code -r "$HOME/development/projects/`ls $HOME/development/projects | fzf`"'
 alias cof='code_open_file'
+alias coft='code_open_file_with_term'
 
