@@ -27,3 +27,7 @@ code_open_file() {
     code -a "$file_to_open"
   fi
 }
+
+alias ccp='code -r "$HOME/development/projects/`ls $HOME/development/projects | fzf`"'
+alias cof='code_open_file'
+
