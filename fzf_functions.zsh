@@ -1,5 +1,5 @@
 code_change_project() {
-  base_url="$HOME/Development/projects"
+  base_url="$HOME/$CCP_BASE"
   project_to="$(ls $base_url | fzf)"
 
   if [[ "${project_to}" != "" ]]; then
@@ -43,7 +43,7 @@ code_open_file_with_term() {
   code -g "$file_name:$line_number"
 }
 
-alias ccp='code -r "$HOME/development/projects/`ls $HOME/development/projects | fzf`"'
+alias ccp='code_change_project'
 alias cof='code_open_file'
 alias coft='code_open_file_with_term'
 
