@@ -40,7 +40,11 @@ code_open_file_with_term() {
   file_name="$(echo $result | awk -F ':' '{print $1}')"
   line_number="$(echo $result | awk -F ':' '{print $2}')"
 
-  code -g "$file_name:$line_number"
+  if [[ $result != "" ]]; then
+    code -g "$file_name:$line_number"
+  else
+    echo "No file selected, exiting"
+  fi
 }
 
 clone_azdo_repo() {
