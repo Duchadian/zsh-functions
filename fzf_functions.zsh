@@ -43,7 +43,17 @@ code_open_file_with_term() {
   code -g "$file_name:$line_number"
 }
 
+clone_azdo_repo() {
+  REPOS=$(az repos list --organization "$AZDO_ORG" --project "$AZDO_PROJECT")
+  SEL=$(echo $REPOS | jq '.[].name' | fzf)
+  SEL_JSON=$(echo $REPOS | jq ".[] | select(.name == ${SEL})")
+  cd "$HOME/$CCP_BASE"
+  echo $SEL_JSON | jq '.remoteUrl'
+  git clone "$(echo $SEL_JSON | jq '.remoteUrl' -r)"
+
+}
+
 alias ccp='code_change_project'
 alias cof='code_open_file'
 alias coft='code_open_file_with_term'
-
+alias cazp='clone_azdo_repo'
