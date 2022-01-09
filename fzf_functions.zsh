@@ -57,7 +57,17 @@ clone_azdo_repo() {
 
 }
 
+checkout_git_branch() {
+  result=$(git branch -a | fzf | tr -d "[:space:]")
+  if [[ $result != "" ]]; then
+    git checkout "$result"
+  else
+    echo "No branch selected, exiting"
+  fi
+}
+
 alias ccp='code_change_project'
 alias cof='code_open_file'
 alias coft='code_open_file_with_term'
 alias cazp='clone_azdo_repo'
+alias gco='checkout_git_branch'
