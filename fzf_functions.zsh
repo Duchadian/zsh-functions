@@ -52,9 +52,16 @@ clone_azdo_repo() {
   SEL=$(echo $REPOS | jq '.[].name' | fzf)
   SEL_JSON=$(echo $REPOS | jq ".[] | select(.name == ${SEL})")
   cd "$HOME/$CCP_BASE"
-  echo $SEL_JSON | jq '.remoteUrl'
   git clone "$(echo $SEL_JSON | jq '.remoteUrl' -r)"
 
+}
+
+clone_gitlab_repo() {
+  REPOS=$(glab api "/projects?simple=true&owned=true&order_by=updated_at" | jq 'del(.[].description)' -cM)
+  SEL=$(echo $REPOS | jq '.[].path' | fzf)
+  SEL_JSON=$(echo $REPOS | jq ".[] | select(.path == ${SEL})")
+  cd "$HOME/$CCP_BASE"
+  git clone "$(echo $SEL_JSON | jq '.ssh_url_to_repo' -r)"
 }
 
 checkout_git_branch() {
@@ -70,5 +77,6 @@ alias ccp='code_change_project'
 alias cof='code_open_file'
 alias coft='code_open_file_with_term'
 alias cazp='clone_azdo_repo'
+alias cglp='clone_gitlab_repo'
 alias gco='checkout_git_branch'
 alias op='cd $HOME/$CCP_BASE/`/bin/ls $HOME/$CCP_BASE | fzf`'
