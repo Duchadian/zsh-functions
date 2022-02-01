@@ -61,7 +61,7 @@ clone_gitlab_repo() {
   REPOS=$(glab api "/projects?simple=true&owned=true&order_by=updated_at" | jq 'del(.[].description)' -cM)
   SEL=$(echo $REPOS | jq '.[].path' | fzf)
 
-  if [[ $SEL != "" ]]; then
+  if [[ "$SEL" != "" ]]; then
     SEL_JSON=$(echo $REPOS | jq ".[] | select(.path == ${SEL})")
     cd "$HOME/$CCP_BASE"
     git clone "$(echo $SEL_JSON | jq '.ssh_url_to_repo' -r)" "${prefix}$(echo $SEL_JSON | jq -r '.path')"
