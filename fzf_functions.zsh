@@ -57,11 +57,17 @@ clone_azdo_repo() {
 }
 
 clone_gitlab_repo() {
+  if [ -z "$1" ]; then prefix=""; else prefix="${1}."; fi
   REPOS=$(glab api "/projects?simple=true&owned=true&order_by=updated_at" | jq 'del(.[].description)' -cM)
   SEL=$(echo $REPOS | jq '.[].path' | fzf)
-  SEL_JSON=$(echo $REPOS | jq ".[] | select(.path == ${SEL})")
-  cd "$HOME/$CCP_BASE"
-  git clone "$(echo $SEL_JSON | jq '.ssh_url_to_repo' -r)"
+
+  if [[ $SEL != "" ]]; then
+    SEL_JSON=$(echo $REPOS | jq ".[] | select(.path == ${SEL})")
+    cd "$HOME/$CCP_BASE"
+    git clone "$(echo $SEL_JSON | jq '.ssh_url_to_repo' -r)" "${prefix}$(echo $SEL_JSON | jq -r '.path')"
+  else
+    echo "No repo selected, exiting"
+  fi
 }
 
 checkout_git_branch() {
