@@ -73,6 +73,7 @@ clone_gitlab_repo() {
 checkout_git_branch() {
   result=$(git branch -a | fzf | tr -d "[:space:]")
   if [[ $result != "" ]]; then
+    result=$(echo $result | sed "s:remotes/origin/::g")
     git checkout "$result"
   else
     echo "No branch selected, exiting"
