@@ -1,6 +1,6 @@
 code_change_project() {
   base_url="$HOME/$CCP_BASE"
-  project_to="$(ls $base_url | fzf)"
+  project_to="$(/bin/ls $base_url | fzf)"
 
   if [[ "${project_to}" != "" ]]; then
     code -r "${base_url}/${project_to}"
