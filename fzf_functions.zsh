@@ -80,10 +80,20 @@ checkout_git_branch() {
   fi
 }
 
+checkout_git_tag() {
+  result=$(git tag | fzf | tr -d "[:space:]")
+  if [[ $result != "" ]]; then
+    git checkout "$result"
+  else
+    echo "No tag selected, exiting"
+  fi
+}
+
 alias ccp='code_change_project'
 alias cof='code_open_file'
 alias coft='code_open_file_with_term'
 alias cazp='clone_azdo_repo'
 alias cglp='clone_gitlab_repo'
 alias gco='checkout_git_branch'
+alias gcot='checkout_git_tag'
 alias op='cd $HOME/$CCP_BASE/`/bin/ls $HOME/$CCP_BASE | fzf`'
