@@ -89,6 +89,15 @@ checkout_git_tag() {
   fi
 }
 
+run_glue_job() {
+  JOB=$(aws glue list-jobs --tags Owner=mrm --max-results 50 | jq '.JobNames' -r | fzf)
+  if [[ -z $JOB ]]; then
+    aws glue start-job-run --name $JOB
+  else
+    echo "No job selected, exiting"
+  fi
+}
+
 alias ccp='code_change_project'
 alias cof='code_open_file'
 alias coft='code_open_file_with_term'
@@ -97,3 +106,4 @@ alias cglp='clone_gitlab_repo'
 alias gco='checkout_git_branch'
 alias gcot='checkout_git_tag'
 alias op='cd $HOME/$CCP_BASE/`/bin/ls $HOME/$CCP_BASE | fzf`'
+alias rgj='run_glue_job'
