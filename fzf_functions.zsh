@@ -49,22 +49,22 @@ code_open_file_with_term() {
 
 clone_azdo_repo() {
   REPOS=$(az repos list --organization "$AZDO_ORG" --project "$AZDO_PROJECT")
-  SEL=$(echo $REPOS | jq '.[].name' | fzf)
-  SEL_JSON=$(echo $REPOS | jq ".[] | select(.name == ${SEL})")
+  SEL=$(jq '.[].name' <<< $REPOS | fzf)
+  SEL_JSON=$(jq ".[] | select(.name == ${SEL})" <<< $REPOS )
   cd "$HOME/$CCP_BASE"
-  git clone "$(echo $SEL_JSON | jq '.remoteUrl' -r)"
+  git clone "$(jq '.remoteUrl' -r <<< $SEL_JSON )"
 
 }
 
 clone_gitlab_repo() {
   if [ -z "$1" ]; then prefix=""; else prefix="${1}."; fi
   REPOS=$(glab api "/projects?simple=true&owned=true&order_by=updated_at" | jq 'del(.[].description)' -cM)
-  SEL=$(echo $REPOS | jq '.[].path' | fzf)
+  SEL=$(jq '.[].path' <<< $REPOS  | fzf)
 
   if [[ "$SEL" != "" ]]; then
-    SEL_JSON=$(echo $REPOS | jq ".[] | select(.path == ${SEL})")
+    SEL_JSON=$(jq ".[] | select(.path == ${SEL})" <<< $REPOS)
     cd "$HOME/$CCP_BASE"
-    git clone "$(echo $SEL_JSON | jq '.ssh_url_to_repo' -r)" "${prefix}$(echo $SEL_JSON | jq -r '.path')"
+    git clone "$( jq '.ssh_url_to_repo' -r <<< $SEL_JSON)" "${prefix}$(jq -r '.path' <<< $SEL_JSON)"
   else
     echo "No repo selected, exiting"
   fi
