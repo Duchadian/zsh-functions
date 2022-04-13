@@ -84,3 +84,16 @@ awsctx() {
 }
 
 _awsctx_restore_profile
+
+## own functions
+
+run_glue_job() {
+  JOB=$(aws glue list-jobs --tags Owner=mrm --max-results 50 | jq '.JobNames[]' -r | fzf)
+  if [[ $JOB != "" ]]; then
+    aws glue start-job-run --job-name $JOB
+  else
+    echo "No job selected, exiting"
+  fi
+}
+
+alias rgj='run_glue_job'
