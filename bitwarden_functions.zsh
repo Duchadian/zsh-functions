@@ -1,4 +1,7 @@
+alias bw_auth='export BW_SESSION=$(bw unlock --passwordfile ~/.bw_auth --raw)'
+
 bw_get_item() {
+  bw_auth
   SEARCH_TERM=${1:?"A search term must be specified"}
   RESULT=$(bw list items --search $SEARCH_TERM)
   SIZE=$(jq '. | length | tonumber' <<< $RESULT)
@@ -13,3 +16,4 @@ bw_get_item() {
 }
 
 alias bwi=bw_get_item
+
