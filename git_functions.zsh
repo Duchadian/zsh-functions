@@ -9,7 +9,7 @@ clone_azdo_repo() {
 
 clone_gitlab_repo() {
   if [ -z "$1" ]; then prefix=""; else prefix="${1}."; fi
-  REPOS=$(glab api "/projects?simple=true&owned=true&order_by=updated_at" | jq 'del(.[].description)' -cM)
+  REPOS=$(glab api --paginate "/projects?simple=true&owned=true&order_by=updated_at" | jq 'del(.[].description)' -cM)
   SEL=$(jq '.[].path' <<< $REPOS  | fzf)
 
   if [[ "$SEL" != "" ]]; then
