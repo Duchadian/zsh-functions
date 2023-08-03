@@ -22,7 +22,7 @@ switch_terraform_state() {
     select ITEM in $(jq -r '.nodes[].name' <<< "${states}"); do
       host=$(glab config get host)
       TF_STATE_ADDRESS="https://${host}/api/v4/projects/${projectId}/terraform/state/${ITEM}"
-      echo terraform init \
+      terraform init \
           -backend-config="address=${TF_STATE_ADDRESS}" \
           -backend-config="lock_address=${TF_STATE_ADDRESS}/lock" \
           -backend-config="unlock_address=${TF_STATE_ADDRESS}/lock" \
